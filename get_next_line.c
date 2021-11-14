@@ -6,7 +6,7 @@
 /*   By: jarrakis <jarrakis@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:52:17 by jarrakis          #+#    #+#             */
-/*   Updated: 2021/11/12 14:53:36 by jarrakis         ###   ########.fr       */
+/*   Updated: 2021/11/14 20:44:10 by jarrakis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,22 @@
 
 char	*get_next_line(int fd)
 {
+	char	*line[BUFFER_SIZE];
+
+	read(fd, &line, BUFFER_SIZE);
+	return (line);
 }
 
 /*
  * main for test
  */
+int	main(void)
+{
+	int		fd;
+	char	*line;
 
+	fd = open("test.txt", O_RDONLY);
+	line = get_next_line(fd);
+	printf("%s\n", line);
+	return (0);
+}
