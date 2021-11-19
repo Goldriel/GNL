@@ -6,7 +6,7 @@
 /*   By: jarrakis <jarrakis@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:52:17 by jarrakis          #+#    #+#             */
-/*   Updated: 2021/11/18 20:28:57 by jarrakis         ###   ########.fr       */
+/*   Updated: 2021/11/19 17:53:19 by jarrakis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,15 @@
 char	*get_next_line(int fd)
 {
 	char	*line;
-	int		read_line;
 
 	line = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (line == NULL)
 		return (NULL);
+	if ((BUFFER_SIZE < 1) || (fd == -1) || (read(fd, line, 0) == -1))
+	{
+		free(line);
+		return (NULL);
+	}
 	read(fd, line, BUFFER_SIZE);
 	return (line);
 }
