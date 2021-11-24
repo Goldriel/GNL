@@ -6,7 +6,7 @@
 /*   By: jarrakis <jarrakis@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:52:17 by jarrakis          #+#    #+#             */
-/*   Updated: 2021/11/23 20:56:37 by jarrakis         ###   ########.fr       */
+/*   Updated: 2021/11/24 20:54:30 by jarrakis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 #include<fcntl.h> // use open for test begin del
 #include<stdlib.h>
 #include"get_next_line.h"
+
+static void	read_line(int fd, char *line, char **save)
+{
+	int	i;
+}
 
 char	*get_next_line(int fd)
 {
@@ -30,8 +35,7 @@ char	*get_next_line(int fd)
 		free(line);
 		return (NULL);
 	}
-	i = read(fd, line, BUFFER_SIZE);
-	printf("%d\n", i);
+	read_line(fd, line, &save);
 	return (line);
 }
 
