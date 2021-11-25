@@ -6,7 +6,7 @@
 /*   By: jarrakis <jarrakis@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:52:17 by jarrakis          #+#    #+#             */
-/*   Updated: 2021/11/24 20:54:30 by jarrakis         ###   ########.fr       */
+/*   Updated: 2021/11/25 21:08:26 by jarrakis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,40 @@
 
 static void	read_line(int fd, char *line, char **save)
 {
-	int	i;
+	ssize_t	i;
+	char	*temp;
+
+	if (*save != NULL || ft_strchr(*save, '\n') != NULL)
+	{
+		i = read(fd, line, BUFFER_SIZE);
+		while (i > 0)
+		{
+			line[i] = '\0';
+			if (*save != NULL)
+				*save = ft_substr(line, 0, i);
+			else
+			{
+				temp = *save;
+				*save = ft_strjoin(*save, line);
+				free(temp);
+			}
+			if (ft_strchr(line, '\n'))
+				break ;
+			i = read(fd, line, BUFFER_SIZE);
+		}
+	}
+	free(line);
 }
 
 char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*save;
-	int			i;
 
 	line = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (line == NULL)
 		return (NULL);
-	if ((BUFFER_SIZE < 1) || (fd == -1) || (read(fd, line, 0) == -1))
+	if ((BUFFER_SIZE <= 0) || (fd < 0) || (read(fd, line, 0) == -1))
 	{
 		free(line);
 		return (NULL);
@@ -53,5 +74,6 @@ int	main(void)
 	printf("\n");
 	line = get_next_line(fd);
 	printf("%s\n", line);
+	free(line);
 	return (0);
 }
