@@ -17,6 +17,8 @@
 #  define BUFFER_SIZE 150
 # endif
 
+#include<stddef.h>
+
 char	*get_next_line(int fb);
 
 char	*ft_strchr(const char *s, int c);
