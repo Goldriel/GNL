@@ -6,7 +6,7 @@
 /*   By: jarrakis <jarrakis@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:52:17 by jarrakis          #+#    #+#             */
-/*   Updated: 2021/11/26 18:37:44 by jarrakis         ###   ########.fr       */
+/*   Updated: 2021/12/01 21:52:35 by jarrakis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,94 +16,49 @@
 #include<stdlib.h>
 #include"get_next_line.h"
 
-static char	*process(char **save)
-{
-	int		i;
-	int		j;
-	char	*ret;
-	char	*tmp;
-
-	if (!*save)
-		return (0);
-	if (!ft_strchr(*save, '\n'))
-	{
-		ret = ft_substr(*save, 0, ft_strlen(*save));
-		free(*save);
-		*save = NULL;
-		return (ret);
-	}
-	i = ft_strlen(*save);
-	j = ft_strlen(ft_strchr(*save, '\n'));
-	ret = ft_substr(*save, 0, i - j + 1);
-	tmp = *save;
-	*save = ft_substr(ft_strchr(*save, '\n'), 1, j - 1);
-	free(tmp);
-	return (ret);
-}
-
-static void	read_line(int fd, char *line, char **save)
-{
-	ssize_t	i;
-	char	*temp;
-
-	if (!*save || !ft_strchr(*save, '\n'))
-	{
-		i = read(fd, line, BUFFER_SIZE);
-		while (i > 0)
-		{
-			line[i] = '\0';
-			if (!*save)
-				*save = ft_substr(line, 0, i);
-			else
-			{
-				temp = *save;
-				*save = ft_strjoin(*save, line);
-				free(temp);
-			}
-			if (ft_strchr(line, '\n'))
-				break ;
-			i = read(fd, line, BUFFER_SIZE);
-		}
-	}
-	free(line);
-}
-
 char	*get_next_line(int fd)
 {
-	char		*line;
+	char		*buff;
 	static char	*save;
+	char		*tmp;
+	ssize_t		read_buff;
 
-	line = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (line == NULL)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!(BUFFER_SIZE <= 0) && !(fd < 0) && !(read(fd, line, 0) == -1))
-	{
-		read_line(fd, line, &save);
-		return (process(&save));
-	}
-	else
-	{
-		free(line);
+	buff = malloc(BUFFER_SIZE + 1);
+	if (buff == NULL)
 		return (NULL);
+	read_buff = read(fd, buff, BUFFER_SIZE);
+	while (read_buff > 0)
+	{
+		buff[read_buff] = '\0';
+		if (!save)
+			save = ft_strdup("");
+		tmp = ft_strjoin(save, buff);
+		free(save);
+		save = tmp;
+		if (ft_strchr(buff, '\n'))
+			break ;
+		read_buff = read(fd, buff, BUFFER_SIZE);
 	}
+	free(buff);
+	return (save);
 }
 
 /*
  * main for test
- */
-/*
+
 int	main(void)
 {
 	int		fd;
 	char	*line;
 
-	fd = open("test.txt", O_RDONLY);
+	fd = open("../test.txt", O_RDONLY);
 	line = get_next_line(fd);
 	printf("%s\n", line);
-	printf("\n");
 	line = get_next_line(fd);
 	printf("%s\n", line);
-	free(line);
+	close(fd);
 	return (0);
 }
 */

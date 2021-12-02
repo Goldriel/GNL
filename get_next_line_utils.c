@@ -14,6 +14,26 @@
 #include<stddef.h>
 #include <stdlib.h>
 
+char	*ft_strdup(const char *s1)
+{
+	size_t	i;
+	size_t	len;
+	char	*dup;
+
+	i = 0;
+	len = ft_strlen(s1);
+	dup = (char *)malloc(sizeof(char) * len + 1);
+	if (dup == NULL)
+		return (NULL);
+	while (s1[i])
+	{
+		dup[i] = s1[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
+
 char	*ft_strchr(const char *s, int c)
 {
 	int	i;
