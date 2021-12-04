@@ -6,7 +6,7 @@
 /*   By: jarrakis <jarrakis@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:51:48 by jarrakis          #+#    #+#             */
-/*   Updated: 2021/12/01 21:41:17 by jarrakis         ###   ########.fr       */
+/*   Updated: 2021/12/04 20:14:17 by jarrakis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,31 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 20
+#  define BUFFER_SIZE 42
 # endif
 
-#include<stddef.h>
+# include<stddef.h>
+# include<stdlib.h>
+# include<unistd.h>
 
 char	*get_next_line(int fb);
 
 char	*ft_strchr(const char *s, int c);
 
+/*
+ ** ft_substr
+ ** returns the portion of string specified by
+ ** the start and length parameters.
+ */
+
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 size_t	ft_strlen(const char *c);
+
+/*
+ ** ft_strjoin
+ ** concatenates two strings and returns a pointer
+ */
 
 char	*ft_strjoin(char const *s1, char const *s2);
 

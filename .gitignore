@@ -8,3 +8,4 @@ get_next_line.h.gch
 *.o
 gnlTester
 .DS_Store
+test2.txt

@@ -6,15 +6,45 @@
 /*   By: jarrakis <jarrakis@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:52:17 by jarrakis          #+#    #+#             */
-/*   Updated: 2021/12/01 21:52:35 by jarrakis         ###   ########.fr       */
+/*   Updated: 2021/12/04 20:11:10 by jarrakis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include<stdio.h> // use print for test begin del
-#include<unistd.h>
-#include<fcntl.h> // use open for test begin del
-#include<stdlib.h>
 #include"get_next_line.h"
+
+static char	*add_save(size_t len, char **save, char **tmp, char **return_line)
+{
+	*return_line = ft_substr(*save, 0, len + 1);
+	*tmp = ft_strdup(*save + len + 1);
+	free(*save);
+	*save = *tmp;
+	if (!**save)
+	{
+		free(*save);
+		*save = NULL;
+	}
+	return (*return_line);
+}
+
+static char	*return_line(ssize_t read_buff, char **save)
+{
+	char	*return_line;
+	char	*tmp;
+	size_t	len;
+
+	if ((read_buff < 0) || (!read_buff && (!save || !*save)))
+		return (NULL);
+	len = 0;
+	return_line = NULL;
+	while ((*save)[len] != '\n' && (*save)[len])
+		len++;
+	if ((*save)[len] == '\n')
+		return (add_save(len, save, &tmp, &return_line));
+	return_line = ft_strdup(*save);
+	free(*save);
+	*save = NULL;
+	return (return_line);
+}
 
 char	*get_next_line(int fd)
 {
@@ -42,23 +72,5 @@ char	*get_next_line(int fd)
 		read_buff = read(fd, buff, BUFFER_SIZE);
 	}
 	free(buff);
-	return (save);
+	return (return_line(read_buff, &save));
 }
-
-/*
- * main for test
-
-int	main(void)
-{
-	int		fd;
-	char	*line;
-
-	fd = open("../test.txt", O_RDONLY);
-	line = get_next_line(fd);
-	printf("%s\n", line);
-	line = get_next_line(fd);
-	printf("%s\n", line);
-	close(fd);
-	return (0);
-}
-*/

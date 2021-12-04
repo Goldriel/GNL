@@ -6,13 +6,11 @@
 /*   By: jarrakis <jarrakis@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:52:12 by jarrakis          #+#    #+#             */
-/*   Updated: 2021/11/24 19:52:41 by jarrakis         ###   ########.fr       */
+/*   Updated: 2021/12/04 18:16:24 by jarrakis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include<stddef.h>
-#include <stdlib.h>
 
 char	*ft_strdup(const char *s1)
 {
@@ -50,45 +48,28 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-static char	*ft_mem(char const *s, size_t len)
-{
-	if (ft_strlen(s) >= len)
-	{
-		return ((char *)malloc((sizeof(char) * len) + 1));
-	}
-	else if (ft_strlen(s) < len)
-	{
-		return ((char *)malloc((sizeof(char) * ft_strlen(s)) + 1));
-	}
-	return (NULL);
-}
-
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*new_str;
-	size_t	i;
+	size_t	out_len;
+	char	*save;
+	char	*out;
 
-	i = 0;
-	if (s == NULL)
+	if (!s)
 		return (NULL);
-	if (start > ft_strlen(s))
-	{
-		new_str = (char *)malloc(sizeof(char) * 1);
-		if (new_str == NULL)
-			return (NULL);
-		return (new_str);
-	}
-	new_str = ft_mem(s, len);
-	if (new_str == NULL)
+	if (ft_strlen(s) < start)
+		return (ft_strdup(""));
+	out_len = ft_strlen(s + start);
+	if (out_len < len)
+		len = out_len;
+	out = malloc(len + 1);
+	if (!out)
 		return (NULL);
-	while (i < len && s[start] != '\0')
-	{
-		new_str[i] = s[start];
-		i++;
-		start++;
-	}
-	new_str[i] = '\0';
-	return (new_str);
+	save = out;
+	s += start;
+	while (*s && len--)
+		*out++ = *s++;
+	*out = '\0';
+	return (save);
 }
 
 size_t	ft_strlen(const char *c)
@@ -103,29 +84,19 @@ size_t	ft_strlen(const char *c)
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*new_str;
-	size_t	i;
-	size_t	j;
+	char	*save;
+	char	*out;
 
-	i = 0;
-	j = 0;
-	if (s1 == NULL || s2 == NULL)
+	if (!s1 || !s2)
 		return (NULL);
-	new_str = (char *)malloc(sizeof(char) * \
-	 (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (new_str == NULL)
+	out = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!out)
 		return (NULL);
-	while (i < ft_strlen(s1))
-	{
-		new_str[i] = s1[i];
-		i++;
-	}
-	while (i < (ft_strlen(s1) + ft_strlen(s2)))
-	{
-		new_str[i] = s2[j];
-		i++;
-		j++;
-	}
-	new_str[i] = '\0';
-	return (new_str);
+	save = out;
+	while (*s1)
+		*out++ = *s1++;
+	while (*s2)
+		*out++ = *s2++;
+	*out = '\0';
+	return (save);
 }
