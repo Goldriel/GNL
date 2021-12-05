@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line.h"
+#include"get_next_line_bonus.h"
 
 static char	*add_save(size_t len, char **save, char **tmp, char **return_line)
 {
@@ -49,7 +49,7 @@ static char	*return_line(ssize_t read_buff, char **save)
 char	*get_next_line(int fd)
 {
 	char		*buff;
-	static char	*save;
+	static char	*save[FD_MAX];
 	char		*tmp;
 	ssize_t		read_buff;
 
@@ -62,15 +62,15 @@ char	*get_next_line(int fd)
 	while (read_buff > 0)
 	{
 		buff[read_buff] = '\0';
-		if (!save)
-			save = ft_strdup("");
-		tmp = ft_strjoin(save, buff);
-		free(save);
-		save = tmp;
+		if (!save[fd])
+			save[fd] = ft_strdup("");
+		tmp = ft_strjoin(save[fd], buff);
+		free(save[fd]);
+		save[fd] = tmp;
 		if (ft_strchr(buff, '\n'))
 			break ;
 		read_buff = read(fd, buff, BUFFER_SIZE);
 	}
 	free(buff);
-	return (return_line(read_buff, &save));
+	return (return_line(read_buff, &save[fd]));
 }
